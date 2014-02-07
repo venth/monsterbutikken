@@ -22,7 +22,7 @@ public class System {
     }
 
     private void createProjections() {
-        monsterProjeksjon = system.actorOf(MonsterProjeksjon.mkProps());
+        monsterProjeksjon = system.actorOf(MonsterProjeksjon.mkProps(eventstore));
     }
 
     private void createActorSystem() {

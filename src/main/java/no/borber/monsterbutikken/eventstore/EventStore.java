@@ -11,8 +11,7 @@ import java.util.List;
 public class EventStore extends UntypedEventsourcedProcessor {
 
 
-    private List<Evt> events = new ArrayList<Evt>();
-    private List<ActorRef> subscribers;
+    private List<ActorRef> subscribers = new ArrayList<ActorRef>();
 
     public static Props mkProps() {
         return Props.create(EventStore.class);
@@ -27,7 +26,7 @@ public class EventStore extends UntypedEventsourcedProcessor {
 
     public void onReceiveCommand(Object msg) {
         if (msg instanceof Cmd) {
-            Evt evt = new Evt("Mottok en command");
+            Evt evt = new Evt(((Cmd) msg).getValue());
 
             persist(evt, new Procedure<Evt>() {
                 public void apply(Evt evt) throws Exception {
