@@ -3,7 +3,7 @@ package no.borber.monsterbutikken.init;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import no.borber.monsterbutikken.monstre.MonsterProjeksjon;
-import no.borber.monsterbutikken.persistence.EventStore;
+import no.borber.monsterbutikken.eventstore.EventStore;
 
 public class System {
 
