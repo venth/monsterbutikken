@@ -18,7 +18,7 @@ public class EventStore extends UntypedEventsourcedProcessor {
     }
 
     @Override
-    public void onReceiveReplay(Object msg) {
+    public void onReceiveRecover(Object msg) {
         if (msg instanceof Evt) {
             publish((Evt) msg);
         }

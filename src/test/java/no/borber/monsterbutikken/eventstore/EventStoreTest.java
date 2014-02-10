@@ -11,9 +11,9 @@ public class EventStoreTest extends MonsterbutikkenTestKit{
 
     @Test
     public void test_at_es_publiserer_og_endrer_tilstand_nar_event_mottas() throws Exception {
-        TestActorRef<Actor> epostKvitteringTransportHandler = TestActorRef.create(_system, EventStore.mkProps(), UUID.randomUUID().toString());
+        TestActorRef<Actor> es = TestActorRef.create(_system, EventStore.mkProps(), UUID.randomUUID().toString());
 
-        epostKvitteringTransportHandler.tell(new Cmd("hupp"), super.testActor());
+        es.tell(new Cmd("hupp"), super.testActor());
         expectMsgClass(Evt.class);
     }
 }
