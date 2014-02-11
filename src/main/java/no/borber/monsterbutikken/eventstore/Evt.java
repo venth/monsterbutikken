@@ -1,6 +1,8 @@
 package no.borber.monsterbutikken.eventstore;
 
-public class Evt {
+import java.io.Serializable;
+
+public class Evt implements Serializable{
     private String value;
 
     public Evt(String value) {

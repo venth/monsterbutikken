@@ -21,10 +21,13 @@ public class MonsterProjeksjon extends UntypedActor{
         eventStore.tell(new Subscription(), self());
     }
 
+
     @Override
     public void onReceive(Object msg) throws Exception {
         if (msg instanceof Evt)
             events.add((Evt) msg);
+        else
+            sender().tell(events, self());
 
     }
 }

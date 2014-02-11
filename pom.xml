@@ -12,7 +12,8 @@
     <properties>
         <jetty.version>9.1.1.v20140108</jetty.version>
         <spring.version>4.0.0.RELEASE</spring.version>
-        <akka.version>2.3.0-RC2</akka.version>
+        <!--<akka.version>2.3.0-RC2</akka.version>-->
+        <akka.version>2.3-SNAPSHOT</akka.version>
     </properties>
 
 	<dependencies>
@@ -90,7 +91,14 @@
             <version>1.9.13</version>
         </dependency>
     </dependencies>
-
+    <repositories>
+        <repository>
+            <id>snapshots-repo</id>
+            <url>http://repo.typesafe.com/typesafe/snapshots/</url>
+            <releases><enabled>false</enabled></releases>
+            <snapshots><enabled>true</enabled></snapshots>
+        </repository>
+    </repositories>
 	<build>
 		<finalName>${project.artifactId}</finalName>
 		<plugins>
