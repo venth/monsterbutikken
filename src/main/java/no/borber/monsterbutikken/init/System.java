@@ -7,7 +7,7 @@ import no.borber.monsterbutikken.eventstore.EventStore;
 
 public class System {
 
-    private ActorSystem system;
+/*    private ActorSystem system;
     private ActorRef eventstore;
     private ActorRef monsterProjeksjon;
 
@@ -27,5 +27,5 @@ public class System {
 
     private void createActorSystem() {
         system = ActorSystem.create();
-    }
+    }*/
 }

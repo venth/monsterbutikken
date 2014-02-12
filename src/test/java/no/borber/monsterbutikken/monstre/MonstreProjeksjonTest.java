@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class MonstreProjeksjonTest extends MonsterbutikkenTestKit{
 
-    @Test
+/*    @Test
     public void testName() throws Exception {
         TestActorRef<MonsterProjeksjon> es = TestActorRef.create(_system, MonsterProjeksjon.mkProps(getTestActor()), UUID.randomUUID().toString());
         expectMsgClass(Subscription.class);
@@ -20,5 +20,5 @@ public class MonstreProjeksjonTest extends MonsterbutikkenTestKit{
         es.tell("getEvts", super.getTestActor());
         expectMsgClass(List.class);
 
-    }
+    }*/
 }
