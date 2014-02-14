@@ -2,30 +2,22 @@ package no.borber.monsterbutikken.init;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import no.borber.monsterbutikken.monstre.MonsterProjeksjon;
-import no.borber.monsterbutikken.eventstore.EventStore;
+import no.borber.monsterbutikken.handlekurv.Handlekurv;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class System {
 
-/*    private ActorSystem system;
-    private ActorRef eventstore;
-    private ActorRef monsterProjeksjon;
+    private ActorRef handlekurv;
 
     public System() {
-        createActorSystem();
-        createEventStore();
-        createProjections();
+        ActorSystem system = ActorSystem.create();
+        handlekurv = system.actorOf(Handlekurv.mkProps());
     }
 
-    private void createEventStore() {
-        eventstore = system.actorOf(EventStore.mkProps());
+    @Bean(name="handlekurv")
+    private ActorRef getHandlekurv() {
+        return handlekurv;
     }
-
-    private void createProjections() {
-        monsterProjeksjon = system.actorOf(MonsterProjeksjon.mkProps(eventstore));
-    }
-
-    private void createActorSystem() {
-        system = ActorSystem.create();
-    }*/
 }
