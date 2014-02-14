@@ -17,7 +17,7 @@ public class System {
     }
 
     @Bean(name="handlekurv")
-    private ActorRef getHandlekurv() {
+    public ActorRef getHandlekurv() {
         return handlekurv;
     }
 }
