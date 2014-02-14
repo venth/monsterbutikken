@@ -1,4 +1,4 @@
-package no.borber.monsterbutikken;
+package no.borber.monsterbutikken.monstre;
 
 public class MonsterJson implements Comparable<MonsterJson>{
     private final String navn;

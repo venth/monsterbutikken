@@ -1,81 +1,54 @@
-monsterButikken.factory('handlekurvService',[ '$q', function($q) {
+monsterApp.factory('handlekurvService',[ '$q', '$http', function($q, $http) {
     var handlekurv = {};
     return {
-        getHandlekurv: function(){
+        getHandlekurv: function(brukernavn){
             //returnerer nåværende tilstand på handlekurv
-            var deferred = $q.defer();
-            deferred.resolve(handlekurv);
-            return deferred.promise;
+            return $http.get('/service/handlekurv/' + brukernavn);
         },
 
-        leggTilMonster: function(monster){
-            //legger et monster i handlekurven
-            eksisterendeMonster = handlekurv[monster.navn];
-            if (!eksisterendeMonster)
-                handlekurv[monster.navn] = {monster: monster, antall: 1};
-            else
-                handlekurv[monster.navn] = {monster: monster, antall: eksisterendeMonster.antall + 1};
-
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
+        leggTilMonster: function(brukernavn, monsternavn){
+            //legger til et monster i handlekurven
+            return $http.post('/service/handlekurv/' + brukernavn + '/leggTil/' + monsternavn);
         },
 
-        fjernMonster: function(kjop){
+        fjernMonster: function(brukernavn, monsternavn){
             //fjerner et monster fra handlekurven. Om dette resulterer at det er ingen av typen igjen fjernes monsteret.
-            if (kjop.antall === 1)
-                delete handlekurv[kjop.monster.navn];
-            else
-                handlekurv[kjop.monster.navn] = {monster: kjop.monster, antall: kjop.antall - 1};
-
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
+            return $http.post('/service/handlekurv/' + brukernavn + '/fjern/' + monsternavn);
         },
 
-        betal: function(){
-            //gjennomfører en handel, returnerer handlekurven som ble betalt
-            handlekurv = {};
-            var deferred = $q.defer();
-            deferred.resolve();
-            return deferred.promise;
+        bekreftOrdre: function(){
+            return $http.post('/service/handlekurv/' + brukernavn + '/bekreftOrdre' + monsternavn);
         },
 
-        getHandlekurvSum: function(){
-            var sum = 0;
-            for (var monsterNavn in handlekurv) {
-                if (handlekurv.hasOwnProperty(monsterNavn)){
-                    var kjop = handlekurv[monsterNavn];
-                    sum = sum + (kjop.antall * kjop.monster.pris);
-                }
-            }
-            var deferred = $q.defer();
-            deferred.resolve(sum);
-            return deferred.promise;
-        },
-
-        handlekurvTom: function(){
-            for (var prop in handlekurv)
-                if (handlekurv.hasOwnProperty(prop)) return false;
-            return true;
+        handlekurvSum: function(brukernavn){
+            return $http.get('/service/handlekurv/' + brukernavn + '/handlekurvSum');
         }
+
     };
 }]);
 
-monsterButikken.factory('loggInnService',[ '$q', function($q) {
+monsterApp.factory('loggInnService',[ '$q', function($q) {
+    var bruker;
     return {
         loggInn: function(brukernavn){
             //logger inn kunden. I monsterbutikken stoler vi på våre kunder, så det er ikke noe passord. Returnerer true om innlogging gikk ok.
-            this.brukernavn = brukernavn;
+            this.bruker = brukernavn;
             var deferred = $q.defer();
             deferred.resolve(true);
+            return deferred.promise;
+        },
+
+        innloggetBruker: function(){
+            //logger inn kunden. I monsterbutikken stoler vi på våre kunder, så det er ikke noe passord. Returnerer true om innlogging gikk ok.
+            var deferred = $q.defer();
+            deferred.resolve(bruker);
             return deferred.promise;
         }
     }
 }]);
 
 
-monsterButikken.factory('monsterService', ['$http', function($http) {
+monsterApp.factory('monsterService', ['$http', function($http) {
     return {
         getMonstre: function() {
             return $http.get('/service/monstre').error(function(){

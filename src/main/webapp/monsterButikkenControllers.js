@@ -1,30 +1,48 @@
-var monsterButikken = angular.module('monsterButikken', ['ui.bootstrap']);
+monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monsterService', 'handlekurvService', 'loggInnService', function($scope, $http, $modal, monsterService, handlekurvService, loggInnService) {
 
-monsterButikken.controller('MonsterController', ['$scope', '$http', '$modal', 'monsterService', 'handlekurvService', 'loggInnService', function($scope, $http, $modal, monsterService, handlekurvService, loggInnService) {
-    $scope.leggTilMonster = function(monster, e){
+    loggInnService.innloggetBruker().then(function(data){
+        $scope.brukernavn = data;
+    });
+
+    $scope.handlekurvTom = true;
+
+    $scope.$watch('handlekurv', function() {
+        var handlekurvTom = true;
+        for (var prop in $scope.handlekurv){
+            if (handlekurv.hasOwnProperty(prop))
+                $scope.handlekurvTom = false;
+        }
+        $scope.handlekurvTom = handlekurvTom;
+    });
+
+    $scope.leggTilMonster = function(monsternavn, e){
         $scope.takkForKjop = false;
         if (e) {
             e.preventDefault();
             e.stopPropagation();
         }
-        handlekurvService.leggTilMonster(monster).then(function(){
-            handlekurvService.getHandlekurv().then(function(data){
+        handlekurvService.leggTilMonster($scope.brukernavn, monsternavn).then(function(){
+            handlekurvService.getHandlekurv($scope.brukernavn).then(function(data){
                 $scope.handlekurv = data;
             })
         });
     };
 
-    $scope.fjernMonster = function(kjop){
-        handlekurvService.fjernMonster(kjop).then(function(){
-            handlekurvService.getHandlekurv().then(function(data){
+   $scope.fjernMonster = function(monsternavn){
+        handlekurvService.fjernMonster($scope.brukernavn. monsternavn).then(function(){
+            handlekurvService.getHandlekurv($scope.brukernavn).then(function(data){
                 $scope.handlekurv = data;
             })
         });
     };
 
-    $scope.getHandlekurvSum = handlekurvService.getHandlekurvSum;
-
-    $scope.handlekurvTom = handlekurvService.handlekurvTom;
+    $scope.$watch('handlekurv', function() {
+        if ($scope.brukernavn){
+            handlekurvService.handlekurvSum($scope.brukernavn).then(function(data){
+                $scope.handlekurvSum =  data.sum();
+            })
+        }
+    });
 
     $scope.betal = function(){
         if (!$scope.brukernavn)
@@ -41,7 +59,7 @@ monsterButikken.controller('MonsterController', ['$scope', '$http', '$modal', 'm
             controller: 'KjopModalCtrl',
             resolve: {
                 handlekurv: function () {
-                    return handlekurvService.getHandlekurv();
+                    return handlekurvService.getHandlekurv($scope.brukernavn);
                 },
                 sum: function () {
                     return handlekurvService.getHandlekurvSum();
@@ -57,36 +75,13 @@ monsterButikken.controller('MonsterController', ['$scope', '$http', '$modal', 'm
         });
     }
 
-    $scope.loggInn = function(){
-        var modalInstance = $modal.open({
-            templateUrl: 'loggInnModal.html',
-            controller: 'LoggInnModalCtrl'
-        });
-
-        return modalInstance.result.then(function (brukernavn) {
-            loggInnService.loggInn(brukernavn).then(function(){
-                $scope.brukernavn = brukernavn;
-            })
-        });
-    }
-
     $scope.monstre = monsterService.getMonstre().success(function(data){
         $scope.monstre = data;
     });
 
 }]);
 
-monsterButikken.controller('LoggInnModalCtrl', ['$scope', '$modalInstance', function($scope, $modalInstance) {
-    $scope.loggInn = function () {
-        $modalInstance.close(this.brukernavn);
-    };
-
-    $scope.cancel = function () {
-        $modalInstance.dismiss('cancel');
-    };
-}]);
-
-monsterButikken.controller('KjopModalCtrl', ['$scope', '$modalInstance', 'handlekurv', 'sum', function($scope, $modalInstance, handlekurv, sum) {
+monsterApp.controller('KjopModalCtrl', ['$scope', '$modalInstance', 'handlekurv', 'sum', function($scope, $modalInstance, handlekurv, sum) {
     $scope.handlekurv = handlekurv;
 
     $scope.sum = sum;
