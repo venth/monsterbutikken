@@ -1,19 +1,21 @@
 package no.borber.monsterbutikken.handlekurv;
 
 public class MonsterOrdre {
-    private String monsterNavn;
+    private String monsternavn;
+    private double pris;
     private int antall;
 
-    public MonsterOrdre(String monsterNavn) {
-        this.monsterNavn = monsterNavn;
+    public MonsterOrdre(String monsternavn, double pris) {
+        this.monsternavn = monsternavn;
+        this.pris = pris;
     }
 
     public void addMonster() {
         this.antall++;
     }
 
-    public String getMonsterNavn() {
-        return monsterNavn;
+    public String getMonsternavn() {
+        return monsternavn;
     }
 
     public int getAntall() {
@@ -22,5 +24,9 @@ public class MonsterOrdre {
 
     public void fjernMonster() {
         antall--;
+    }
+
+    public double getPris() {
+        return pris;
     }
 }

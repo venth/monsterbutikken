@@ -3,7 +3,7 @@ package no.borber.monsterbutikken.handlekurv;
 import akka.actor.Props;
 import akka.japi.Procedure;
 import akka.persistence.UntypedEventsourcedProcessor;
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import no.borber.monsterbutikken.es.Cmd;
 import no.borber.monsterbutikken.es.Evt;
 import org.slf4j.Logger;
@@ -42,17 +42,23 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
     public void onReceiveCommand(Object msg) {
         if (msg instanceof Cmd) {
             handleCommand((Cmd) msg);
-        } else if (msg instanceof String)
-           sender().tell(ImmutableList.copyOf(handlekurver.get(msg).values()), self());
+        } else if (msg instanceof String){
+            if (handlekurver.get(msg) != null)
+                sender().tell(ImmutableMap.copyOf(handlekurver.get(msg)), self());
+            else
+                sender().tell(ImmutableMap.of(), self());
+        }
+
     }
 
     private void handleCommand(final Cmd command) {
         if (command instanceof LeggMonsterIHandlekurv){
             final String monsterNavn = ((LeggMonsterIHandlekurv) command).getMonsterNavn();
             final String bruker = ((LeggMonsterIHandlekurv) command).getBruker();
+            final double pris = ((LeggMonsterIHandlekurv) command).getPris();
 
             if (monsterNavn != null && bruker != null) {
-                persist(new MonsterLagtTilIHandlekurv(bruker, monsterNavn), getHandler(MonsterLagtTilIHandlekurv.class));
+                persist(new MonsterLagtTilIHandlekurv(bruker, monsterNavn, pris), getHandler(MonsterLagtTilIHandlekurv.class));
             } else
                 sender().tell("Invalid command!", self());
         } else if (command instanceof FjernMonsterFraHandlekurv){
@@ -78,7 +84,7 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
                     handlekurver.put(monsterLagtTilIHandlekurv.getBruker(), new HashMap<String, MonsterOrdre>());
 
                 if (handlekurver.get(monsterLagtTilIHandlekurv.getBruker()).get(monsterLagtTilIHandlekurv.getMonsterNavn()) == null)
-                    handlekurver.get(monsterLagtTilIHandlekurv.getBruker()).put(monsterLagtTilIHandlekurv.getMonsterNavn(), new MonsterOrdre(monsterLagtTilIHandlekurv.getMonsterNavn()));
+                    handlekurver.get(monsterLagtTilIHandlekurv.getBruker()).put(monsterLagtTilIHandlekurv.getMonsterNavn(), new MonsterOrdre(monsterLagtTilIHandlekurv.getMonsterNavn(), monsterLagtTilIHandlekurv.getPris()));
 
                 handlekurver.get(monsterLagtTilIHandlekurv.getBruker()).get(monsterLagtTilIHandlekurv.getMonsterNavn()).addMonster();
             }
@@ -91,7 +97,7 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
 
                 monsterOrdre.fjernMonster();
                 if (monsterOrdre.getAntall() == 0)
-                    handlekurver.get(monsterFjernetFraHandlekurv.getBruker()).remove(monsterOrdre.getMonsterNavn());
+                    handlekurver.get(monsterFjernetFraHandlekurv.getBruker()).remove(monsterOrdre.getMonsternavn());
             }
         });
     }

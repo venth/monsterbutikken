@@ -25,19 +25,19 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
     public void test_at_handlekurvens_tilstand_endrer_seg_nar_monster_legges_til() throws Exception {
         ActorRef es = _system.actorOf(Handlekurv.mkProps(), UUID.randomUUID().toString());
 
-        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
+        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
         List<MonsterOrdre> ordrer = (List<MonsterOrdre>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
         assertFalse(ordrer.isEmpty());
-        assertEquals("Kraken", ordrer.get(0).getMonsterNavn());
+        assertEquals("Kraken", ordrer.get(0).getMonsternavn());
     }
 
     @Test
     public void test_at_antall_monstre_av_en_type_stiger_nar_flere_legges_til() throws Exception {
         ActorRef es = _system.actorOf(Handlekurv.mkProps(), UUID.randomUUID().toString());
 
-        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
-        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
+        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
+        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
 
         List<MonsterOrdre> ordrer = (List<MonsterOrdre>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
@@ -49,8 +49,8 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
     public void test_at_antall_monstre_av_en_type_synker_nar_monstre_fjernes() throws Exception {
         ActorRef es = _system.actorOf(Handlekurv.mkProps(), UUID.randomUUID().toString());
 
-        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
-        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
+        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
+        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
         es.tell(new FjernMonsterFraHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
 
         List<MonsterOrdre> ordrer = (List<MonsterOrdre>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
@@ -63,8 +63,8 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
     public void test_at_monster_forsvinner_fra_handlekurv_nar_antall_synker_til_0() throws Exception {
         ActorRef es = _system.actorOf(Handlekurv.mkProps(), UUID.randomUUID().toString());
 
-        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
-        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
+        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
+        es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
         es.tell(new FjernMonsterFraHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
         es.tell(new FjernMonsterFraHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
 
@@ -78,11 +78,11 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
         String storeId = UUID.randomUUID().toString();
         ActorRef handlekurv = _system.actorOf(Handlekurv.mkProps(), storeId);
 
-        handlekurv.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
+        handlekurv.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
         List<MonsterOrdre> ordrer = (List<MonsterOrdre>) Await.result(ask(handlekurv, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
         assertFalse(ordrer.isEmpty());
-        assertEquals("Kraken", ordrer.get(0).getMonsterNavn());
+        assertEquals("Kraken", ordrer.get(0).getMonsternavn());
 
         handlekurv.tell(Kill.getInstance(), getTestActor());
         Thread.sleep(250); //wait to ensure handlekurv is dead
@@ -91,7 +91,7 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
         List<MonsterOrdre> gjenskapteOrdrer = (List<MonsterOrdre>) Await.result(ask(gjenskaptHandlekurv, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(gjenskapteOrdrer);
         assertFalse(gjenskapteOrdrer.isEmpty());
-        assertEquals("Kraken", gjenskapteOrdrer.get(0).getMonsterNavn());
+        assertEquals("Kraken", gjenskapteOrdrer.get(0).getMonsternavn());
 
     }
 

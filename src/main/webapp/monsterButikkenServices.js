@@ -1,48 +1,43 @@
 monsterApp.factory('handlekurvService',[ '$q', '$http', function($q, $http) {
     var handlekurv = {};
     return {
-        getHandlekurv: function(brukernavn){
+        getHandlekurv: function(){
             //returnerer nåværende tilstand på handlekurv
-            return $http.get('/service/handlekurv/' + brukernavn);
+            return $http.get('/service/handlekurv/');
         },
 
-        leggTilMonster: function(brukernavn, monsternavn){
+        leggTilMonster: function(monsternavn){
             //legger til et monster i handlekurven
-            return $http.post('/service/handlekurv/' + brukernavn + '/leggTil/' + monsternavn);
+            return $http.post('/service/handlekurv/leggTil/' + monsternavn);
         },
 
-        fjernMonster: function(brukernavn, monsternavn){
+        fjernMonster: function(monsternavn){
             //fjerner et monster fra handlekurven. Om dette resulterer at det er ingen av typen igjen fjernes monsteret.
-            return $http.post('/service/handlekurv/' + brukernavn + '/fjern/' + monsternavn);
+            return $http.post('/service/handlekurv/fjern/' + monsternavn);
         },
 
         bekreftOrdre: function(){
-            return $http.post('/service/handlekurv/' + brukernavn + '/bekreftOrdre' + monsternavn);
+            return $http.post('/service/handlekurv/bekreftOrdre');
         },
 
-        handlekurvSum: function(brukernavn){
-            return $http.get('/service/handlekurv/' + brukernavn + '/handlekurvSum');
+        handlekurvSum: function(){
+            return $http.get('/service/handlekurv/sum');
         }
 
     };
 }]);
 
-monsterApp.factory('loggInnService',[ '$q', function($q) {
-    var bruker;
+monsterApp.factory('loggInnService',[ '$q', '$http', function($q, $http) {
+
     return {
         loggInn: function(brukernavn){
-            //logger inn kunden. I monsterbutikken stoler vi på våre kunder, så det er ikke noe passord. Returnerer true om innlogging gikk ok.
-            this.bruker = brukernavn;
-            var deferred = $q.defer();
-            deferred.resolve(true);
-            return deferred.promise;
+            //logger inn kunden. I monsterbutikken stoler vi på våre kunder, så det er ikke noe passord. Brukernavnet settes på session på serversiden.
+            return $http.post('/service/autentisering/logginn/' + brukernavn)
         },
 
         innloggetBruker: function(){
             //logger inn kunden. I monsterbutikken stoler vi på våre kunder, så det er ikke noe passord. Returnerer true om innlogging gikk ok.
-            var deferred = $q.defer();
-            deferred.resolve(bruker);
-            return deferred.promise;
+            return $http.get('/service/autentisering/innloggetBruker')
         }
     }
 }]);

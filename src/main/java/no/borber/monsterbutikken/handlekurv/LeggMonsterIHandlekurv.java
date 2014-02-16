@@ -6,10 +6,12 @@ public class LeggMonsterIHandlekurv extends Cmd {
 
     private String bruker;
     private String monsterNavn;
+    private double pris;
 
-    public LeggMonsterIHandlekurv(String bruker, String monsterNavn) {
+    public LeggMonsterIHandlekurv(String bruker, String monsterNavn, double pris) {
         this.bruker = bruker;
         this.monsterNavn = monsterNavn;
+        this.pris = pris;
     }
 
     public String getBruker() {
@@ -18,5 +20,9 @@ public class LeggMonsterIHandlekurv extends Cmd {
 
     public String getMonsterNavn() {
         return monsterNavn;
+    }
+
+    public double getPris() {
+        return pris;
     }
 }

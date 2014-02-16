@@ -6,7 +6,7 @@ public class MonsterRepo {
 
     private final static Map<String,MonsterJson> monstre = new HashMap<>();
 
-    public MonsterRepo() {
+    static  {
         monstre.put("Ao (skilpadde)", new MonsterJson("Ao (skilpadde)", 100000));
         monstre.put("Bakeneko", new MonsterJson("Bakeneko", 120000));
         monstre.put("Basilisk", new MonsterJson("Basilisk", 175000));
