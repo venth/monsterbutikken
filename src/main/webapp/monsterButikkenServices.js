@@ -29,12 +29,17 @@ monsterApp.factory('handlekurvService',[ '$q', '$http', function($q, $http) {
     };
 }]);
 
-monsterApp.factory('loggInnService',[ '$q', '$http', function($q, $http) {
+monsterApp.factory('autentiseringService',[ '$q', '$http', function($q, $http) {
 
     return {
         loggInn: function(kundenavn){
             //logger inn kunden. I monsterbutikken stoler vi på våre kunder, så det er ikke noe passord. Kundenavnet settes på session på serversiden.
             return $http.post('/service/autentisering/logginn/' + kundenavn)
+        },
+
+        loggUt: function(){
+            //logger kunden ut, fjerner kundenavn fra session
+            return $http.post('/service/autentisering/loggut')
         },
 
         innloggetBruker: function(){

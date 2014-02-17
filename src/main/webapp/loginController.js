@@ -1,6 +1,6 @@
-monsterApp.controller('LoginController', ['$scope', 'loggInnService', '$location',  function($scope, loggInnService, $location) {
+monsterApp.controller('LoginController', ['$scope', 'autentiseringService', '$location',  function($scope, autentiseringService, $location) {
     $scope.loggInn = function(){
-        loggInnService.loggInn($scope.kundenavn).then(function(){
+        autentiseringService.loggInn($scope.kundenavn).then(function(){
             $location.url('/butikken');
         })
     }

@@ -1,8 +1,13 @@
-monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monsterService', 'handlekurvService', 'loggInnService', function($scope, $http, $modal, monsterService, handlekurvService, loggInnService) {
+monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monsterService', 'handlekurvService', 'autentiseringService', '$location', function($scope, $http, $modal, monsterService, handlekurvService, autentiseringService, $location) {
 
-    loggInnService.innloggetBruker().success(function(data){
+    autentiseringService.innloggetBruker().success(function(data){
         $scope.kundenavn = data.kundenavn;
     });
+
+    $scope.loggUt = function(){
+        autentiseringService.loggUt();
+        $location.url('/');
+    };
 
     $scope.handlekurvTom = true;
 
@@ -49,10 +54,6 @@ monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monste
     });
 
     $scope.betal = function(){
-            betal();
-    };
-
-    function betal(){
         var modalInstance = $modal.open({
             templateUrl: 'kjopModal.html',
             controller: 'KjopModalCtrl',
@@ -72,7 +73,7 @@ monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monste
                 $scope.takkForKjop = true;
             });
         });
-    }
+    };
 
     $scope.monstre = monsterService.getMonstre().success(function(data){
         $scope.monstre = data;

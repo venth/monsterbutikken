@@ -19,6 +19,12 @@ public class AutentiseringController {
         httpRequest.getSession().setAttribute("kundenavn", kundenavn);
     }
 
+    @RequestMapping(value="autentisering/loggut", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void loggUt(){
+        httpRequest.getSession().removeAttribute("kundenavn");
+    }
+
     @RequestMapping(value="autentisering/innloggetKunde", method = RequestMethod.GET)
     @ResponseBody
     public Kunde getInnloggetBruker(){
