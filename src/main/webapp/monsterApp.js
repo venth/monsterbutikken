@@ -19,12 +19,10 @@ monsterApp.run(['$rootScope', '$location', 'autentiseringService', function ($ro
 
         autentiseringService.innloggetBruker().success(function(innloggetKunde){
             if (!innloggetKunde.kundenavn) {
-                console.log('DENY');
                 event.preventDefault();
                 $location.path('/');
             }
             else {
-                console.log('ALLOW');
                 $location.path('/butikken');
             }
         })
