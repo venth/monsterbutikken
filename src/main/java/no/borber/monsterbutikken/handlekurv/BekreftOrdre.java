@@ -1,6 +1,8 @@
 package no.borber.monsterbutikken.handlekurv;
 
-public class BekreftOrdre {
+import no.borber.monsterbutikken.es.Cmd;
+
+public class BekreftOrdre extends Cmd {
     private String bruker;
 
     public BekreftOrdre(String bruker) {

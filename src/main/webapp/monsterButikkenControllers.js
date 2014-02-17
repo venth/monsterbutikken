@@ -68,6 +68,7 @@ monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monste
 
         modalInstance.result.then(function () {
             handlekurvService.bekreftOrdre().success(function(){
+                getHandlekurv();
                 $scope.takkForKjop = true;
             });
         });

@@ -9,7 +9,9 @@ import no.borber.monsterbutikken.es.Evt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Handlekurv extends UntypedEventsourcedProcessor {
@@ -17,6 +19,7 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
     public static final Logger log = LoggerFactory.getLogger(Handlekurv.class);
 
     private Map<String, Map<String, MonsterOrdre>> handlekurver = new HashMap<>();
+    private Map<String, List<BekreftetOrdre>> bekreftedeOrdrer = new HashMap<>();
     private Map<Class, Procedure<HandlekurvEvt>> eventHandlers = new HashMap<>();
 
     public static Props mkProps() {
@@ -48,7 +51,6 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
             else
                 sender().tell(ImmutableMap.of(), self());
         }
-
     }
 
     private void handleCommand(final Cmd command) {
@@ -67,6 +69,13 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
 
             if (monsterNavn != null && bruker != null) {
                 persist(new MonsterFjernetFraHandlekurv(bruker, monsterNavn), getHandler(MonsterFjernetFraHandlekurv.class));
+            } else
+                sender().tell("Invalid command!", self());
+        } else if (command instanceof BekreftOrdre){
+            final String bruker = ((BekreftOrdre) command).getBruker();
+
+            if (bruker != null) {
+                persist(new OrdreBekreftet(bruker), getHandler(OrdreBekreftet.class));
             } else
                 sender().tell("Invalid command!", self());
         }
@@ -98,6 +107,22 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
                 monsterOrdre.fjernMonster();
                 if (monsterOrdre.getAntall() == 0)
                     handlekurver.get(monsterFjernetFraHandlekurv.getBruker()).remove(monsterOrdre.getMonsternavn());
+            }
+        });
+
+        eventHandlers.put(OrdreBekreftet.class, new Procedure<HandlekurvEvt>() {
+            public void apply(HandlekurvEvt evt) throws Exception {
+                OrdreBekreftet ordreBekreftet = (OrdreBekreftet) evt;
+                for (MonsterOrdre ordrelinje  : handlekurver.get(ordreBekreftet.getBruker()).values()){
+                    List<MonsterOrdre> ordrelinjer = new ArrayList<>();
+                    ordrelinjer.add(ordrelinje);
+
+                    if (bekreftedeOrdrer.get(ordreBekreftet.getBruker()) == null)
+                        bekreftedeOrdrer.put(ordreBekreftet.getBruker(), new ArrayList<BekreftetOrdre>());
+
+                    bekreftedeOrdrer.get(ordreBekreftet.getBruker()).add(new BekreftetOrdre(ordrelinjer));
+                }
+                handlekurver.remove(ordreBekreftet.getBruker());
             }
         });
     }
