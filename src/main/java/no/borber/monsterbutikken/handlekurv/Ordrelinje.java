@@ -1,11 +1,11 @@
 package no.borber.monsterbutikken.handlekurv;
 
-public class MonsterOrdre {
+public class Ordrelinje {
     private String monsternavn;
     private double pris;
     private int antall;
 
-    public MonsterOrdre(String monsternavn, double pris) {
+    public Ordrelinje(String monsternavn, double pris) {
         this.monsternavn = monsternavn;
         this.pris = pris;
     }

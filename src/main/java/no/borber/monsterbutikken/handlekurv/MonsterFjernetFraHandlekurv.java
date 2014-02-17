@@ -1,20 +1,20 @@
 package no.borber.monsterbutikken.handlekurv;
 
 public class MonsterFjernetFraHandlekurv extends HandlekurvEvt {
-    private String monsterNavn;
+    private String monsternavn;
 
-    public MonsterFjernetFraHandlekurv(String bruker, String monsterNavn) {
-        super(bruker);
-        this.monsterNavn = monsterNavn;
+    public MonsterFjernetFraHandlekurv(String kundenavn, String monsternavn) {
+        super(kundenavn);
+        this.monsternavn = monsternavn;
     }
 
-    public String getMonsterNavn() {
-        return monsterNavn;
+    public String getMonsternavn() {
+        return monsternavn;
     }
 
     @Override
     public String getLogMessage() {
-        return "Monster fjernet til i handlekurven til " + getBruker();
+        return "Monster fjernet til i handlekurven til " + getKundenavn();
     }
 
 }

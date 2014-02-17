@@ -4,22 +4,22 @@ import no.borber.monsterbutikken.es.Cmd;
 
 public class LeggMonsterIHandlekurv extends Cmd {
 
-    private String bruker;
-    private String monsterNavn;
+    private String kundenavn;
+    private String monsternavn;
     private double pris;
 
-    public LeggMonsterIHandlekurv(String bruker, String monsterNavn, double pris) {
-        this.bruker = bruker;
-        this.monsterNavn = monsterNavn;
+    public LeggMonsterIHandlekurv(String kundenavn, String monsternavn, double pris) {
+        this.kundenavn = kundenavn;
+        this.monsternavn = monsternavn;
         this.pris = pris;
     }
 
-    public String getBruker() {
-        return bruker;
+    public String getKundenavn() {
+        return kundenavn;
     }
 
-    public String getMonsterNavn() {
-        return monsterNavn;
+    public String getMonsternavn() {
+        return monsternavn;
     }
 
     public double getPris() {

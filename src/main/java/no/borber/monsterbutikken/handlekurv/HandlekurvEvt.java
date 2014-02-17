@@ -3,13 +3,13 @@ package no.borber.monsterbutikken.handlekurv;
 import no.borber.monsterbutikken.es.Evt;
 
 public abstract class HandlekurvEvt extends Evt {
-    private String bruker;
+    private String kundenavn;
 
-    public HandlekurvEvt(String bruker) {
-        this.bruker = bruker;
+    public HandlekurvEvt(String kundenavn) {
+        this.kundenavn = kundenavn;
     }
 
-    public final String getBruker() {
-        return bruker;
+    public final String getKundenavn() {
+        return kundenavn;
     }
 }

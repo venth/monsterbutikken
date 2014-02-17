@@ -12,7 +12,7 @@ public class MonstreController {
 
     @RequestMapping(value = "/monstre")
     @ResponseBody
-    public Set<MonsterJson> getAvailableMonsters(){
+    public Set<MonsterJson> getMonstre(){
         return MonsterRepo.getMonstre();
     }
 }

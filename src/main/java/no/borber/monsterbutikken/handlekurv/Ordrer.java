@@ -14,19 +14,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Handlekurv extends UntypedEventsourcedProcessor {
+public class Ordrer extends UntypedEventsourcedProcessor {
 
-    public static final Logger log = LoggerFactory.getLogger(Handlekurv.class);
+    public static final Logger log = LoggerFactory.getLogger(Ordrer.class);
 
-    private Map<String, Map<String, MonsterOrdre>> handlekurver = new HashMap<>();
+    private Map<String, Map<String, Ordrelinje>> handlekurver = new HashMap<>();
     private Map<String, List<BekreftetOrdre>> bekreftedeOrdrer = new HashMap<>();
     private Map<Class, Procedure<HandlekurvEvt>> eventHandlers = new HashMap<>();
 
     public static Props mkProps() {
-        return Props.create(Handlekurv.class);
+        return Props.create(Ordrer.class);
     }
 
-    public Handlekurv() {
+    public Ordrer() {
         initEventHandlers();
     }
 
@@ -55,24 +55,24 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
 
     private void handleCommand(final Cmd command) {
         if (command instanceof LeggMonsterIHandlekurv){
-            final String monsterNavn = ((LeggMonsterIHandlekurv) command).getMonsterNavn();
-            final String bruker = ((LeggMonsterIHandlekurv) command).getBruker();
+            final String monsterNavn = ((LeggMonsterIHandlekurv) command).getMonsternavn();
+            final String kundenavn = ((LeggMonsterIHandlekurv) command).getKundenavn();
             final double pris = ((LeggMonsterIHandlekurv) command).getPris();
 
-            if (monsterNavn != null && bruker != null) {
-                persist(new MonsterLagtTilIHandlekurv(bruker, monsterNavn, pris), getHandler(MonsterLagtTilIHandlekurv.class));
+            if (monsterNavn != null && kundenavn != null) {
+                persist(new MonsterLagtTilIHandlekurv(kundenavn, monsterNavn, pris), getHandler(MonsterLagtTilIHandlekurv.class));
             } else
                 sender().tell("Invalid command!", self());
         } else if (command instanceof FjernMonsterFraHandlekurv){
-            final String monsterNavn = ((FjernMonsterFraHandlekurv) command).getMonsterNavn();
-            final String bruker = ((FjernMonsterFraHandlekurv) command).getBruker();
+            final String monsterNavn = ((FjernMonsterFraHandlekurv) command).getMonsternavn();
+            final String kundenavn = ((FjernMonsterFraHandlekurv) command).getKundenavn();
 
-            if (monsterNavn != null && bruker != null) {
-                persist(new MonsterFjernetFraHandlekurv(bruker, monsterNavn), getHandler(MonsterFjernetFraHandlekurv.class));
+            if (monsterNavn != null && kundenavn != null) {
+                persist(new MonsterFjernetFraHandlekurv(kundenavn, monsterNavn), getHandler(MonsterFjernetFraHandlekurv.class));
             } else
                 sender().tell("Invalid command!", self());
         } else if (command instanceof BekreftOrdre){
-            final String bruker = ((BekreftOrdre) command).getBruker();
+            final String bruker = ((BekreftOrdre) command).getKundenavn();
 
             if (bruker != null) {
                 persist(new OrdreBekreftet(bruker), getHandler(OrdreBekreftet.class));
@@ -89,40 +89,40 @@ public class Handlekurv extends UntypedEventsourcedProcessor {
         eventHandlers.put(MonsterLagtTilIHandlekurv.class, new Procedure<HandlekurvEvt>() {
             public void apply(HandlekurvEvt evt) throws Exception {
                 MonsterLagtTilIHandlekurv monsterLagtTilIHandlekurv = (MonsterLagtTilIHandlekurv) evt;
-                if (handlekurver.get(monsterLagtTilIHandlekurv.getBruker()) == null)
-                    handlekurver.put(monsterLagtTilIHandlekurv.getBruker(), new HashMap<String, MonsterOrdre>());
+                if (handlekurver.get(monsterLagtTilIHandlekurv.getKundenavn()) == null)
+                    handlekurver.put(monsterLagtTilIHandlekurv.getKundenavn(), new HashMap<String, Ordrelinje>());
 
-                if (handlekurver.get(monsterLagtTilIHandlekurv.getBruker()).get(monsterLagtTilIHandlekurv.getMonsterNavn()) == null)
-                    handlekurver.get(monsterLagtTilIHandlekurv.getBruker()).put(monsterLagtTilIHandlekurv.getMonsterNavn(), new MonsterOrdre(monsterLagtTilIHandlekurv.getMonsterNavn(), monsterLagtTilIHandlekurv.getPris()));
+                if (handlekurver.get(monsterLagtTilIHandlekurv.getKundenavn()).get(monsterLagtTilIHandlekurv.getMonsternavn()) == null)
+                    handlekurver.get(monsterLagtTilIHandlekurv.getKundenavn()).put(monsterLagtTilIHandlekurv.getMonsternavn(), new Ordrelinje(monsterLagtTilIHandlekurv.getMonsternavn(), monsterLagtTilIHandlekurv.getPris()));
 
-                handlekurver.get(monsterLagtTilIHandlekurv.getBruker()).get(monsterLagtTilIHandlekurv.getMonsterNavn()).addMonster();
+                handlekurver.get(monsterLagtTilIHandlekurv.getKundenavn()).get(monsterLagtTilIHandlekurv.getMonsternavn()).addMonster();
             }
         });
 
         eventHandlers.put(MonsterFjernetFraHandlekurv.class, new Procedure<HandlekurvEvt>() {
             public void apply(HandlekurvEvt evt) throws Exception {
                 MonsterFjernetFraHandlekurv monsterFjernetFraHandlekurv = (MonsterFjernetFraHandlekurv) evt;
-                MonsterOrdre monsterOrdre = handlekurver.get(monsterFjernetFraHandlekurv.getBruker()).get(monsterFjernetFraHandlekurv.getMonsterNavn());
+                Ordrelinje ordrelinje = handlekurver.get(monsterFjernetFraHandlekurv.getKundenavn()).get(monsterFjernetFraHandlekurv.getMonsternavn());
 
-                monsterOrdre.fjernMonster();
-                if (monsterOrdre.getAntall() == 0)
-                    handlekurver.get(monsterFjernetFraHandlekurv.getBruker()).remove(monsterOrdre.getMonsternavn());
+                ordrelinje.fjernMonster();
+                if (ordrelinje.getAntall() == 0)
+                    handlekurver.get(monsterFjernetFraHandlekurv.getKundenavn()).remove(ordrelinje.getMonsternavn());
             }
         });
 
         eventHandlers.put(OrdreBekreftet.class, new Procedure<HandlekurvEvt>() {
             public void apply(HandlekurvEvt evt) throws Exception {
                 OrdreBekreftet ordreBekreftet = (OrdreBekreftet) evt;
-                for (MonsterOrdre ordrelinje  : handlekurver.get(ordreBekreftet.getBruker()).values()){
-                    List<MonsterOrdre> ordrelinjer = new ArrayList<>();
+                for (Ordrelinje ordrelinje  : handlekurver.get(ordreBekreftet.getKundenavn()).values()){
+                    List<Ordrelinje> ordrelinjer = new ArrayList<>();
                     ordrelinjer.add(ordrelinje);
 
-                    if (bekreftedeOrdrer.get(ordreBekreftet.getBruker()) == null)
-                        bekreftedeOrdrer.put(ordreBekreftet.getBruker(), new ArrayList<BekreftetOrdre>());
+                    if (bekreftedeOrdrer.get(ordreBekreftet.getKundenavn()) == null)
+                        bekreftedeOrdrer.put(ordreBekreftet.getKundenavn(), new ArrayList<BekreftetOrdre>());
 
-                    bekreftedeOrdrer.get(ordreBekreftet.getBruker()).add(new BekreftetOrdre(ordrelinjer));
+                    bekreftedeOrdrer.get(ordreBekreftet.getKundenavn()).add(new BekreftetOrdre(ordrelinjer));
                 }
-                handlekurver.remove(ordreBekreftet.getBruker());
+                handlekurver.remove(ordreBekreftet.getKundenavn());
             }
         });
     }

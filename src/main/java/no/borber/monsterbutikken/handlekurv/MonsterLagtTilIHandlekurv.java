@@ -1,17 +1,17 @@
 package no.borber.monsterbutikken.handlekurv;
 
 public class MonsterLagtTilIHandlekurv extends HandlekurvEvt {
-    private String monsterNavn;
+    private String monsternavn;
     private double pris;
 
-    public MonsterLagtTilIHandlekurv(String bruker, String monsterNavn, double pris) {
-        super(bruker);
-        this.monsterNavn = monsterNavn;
+    public MonsterLagtTilIHandlekurv(String kundenavn, String monsternavn, double pris) {
+        super(kundenavn);
+        this.monsternavn = monsternavn;
         this.pris = pris;
     }
 
-    public String getMonsterNavn() {
-        return monsterNavn;
+    public String getMonsternavn() {
+        return monsternavn;
     }
 
     public double getPris() {
@@ -20,6 +20,6 @@ public class MonsterLagtTilIHandlekurv extends HandlekurvEvt {
 
     @Override
     public String getLogMessage() {
-        return "Monster lagt til i handlekurven til " + getBruker();
+        return "Monster lagt til i handlekurven til " + getKundenavn();
     }
 }

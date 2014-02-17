@@ -1,7 +1,7 @@
 monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monsterService', 'handlekurvService', 'loggInnService', function($scope, $http, $modal, monsterService, handlekurvService, loggInnService) {
 
     loggInnService.innloggetBruker().success(function(data){
-        $scope.brukernavn = data.brukernavn;
+        $scope.kundenavn = data.kundenavn;
     });
 
     $scope.handlekurvTom = true;

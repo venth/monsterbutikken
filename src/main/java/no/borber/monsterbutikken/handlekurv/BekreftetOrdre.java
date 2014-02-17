@@ -3,6 +3,13 @@ package no.borber.monsterbutikken.handlekurv;
 import java.util.List;
 
 public class BekreftetOrdre {
-    public BekreftetOrdre(List<MonsterOrdre> ordrelinjer) {
+    private List<Ordrelinje> ordrelinjer;
+
+    public BekreftetOrdre(List<Ordrelinje> ordrelinjer) {
+        this.ordrelinjer = ordrelinjer;
+    }
+
+    public List<Ordrelinje> getOrdrelinjer() {
+        return ordrelinjer;
     }
 }

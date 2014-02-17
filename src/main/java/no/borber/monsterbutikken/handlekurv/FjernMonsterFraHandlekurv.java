@@ -3,19 +3,19 @@ package no.borber.monsterbutikken.handlekurv;
 import no.borber.monsterbutikken.es.Cmd;
 
 public class FjernMonsterFraHandlekurv extends Cmd {
-    private final String bruker;
-    private final String monsterNavn;
+    private final String kundenavn;
+    private final String monsternavn;
 
-    public FjernMonsterFraHandlekurv(String bruker, String monsterNavn) {
-        this.bruker = bruker;
-        this.monsterNavn = monsterNavn;
+    public FjernMonsterFraHandlekurv(String kundenavn, String monsternavn) {
+        this.kundenavn = kundenavn;
+        this.monsternavn = monsternavn;
     }
 
-    public String getMonsterNavn() {
-        return monsterNavn;
+    public String getMonsternavn() {
+        return monsternavn;
     }
 
-    public String getBruker() {
-        return bruker;
+    public String getKundenavn() {
+        return kundenavn;
     }
 }

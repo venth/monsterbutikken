@@ -21,15 +21,14 @@ public class HandlekurvController {
     @Resource
     private HttpServletRequest httpRequest;
 
-    @Resource(name="handlekurv")
-    ActorRef handlekurvStore;
+    @Resource(name="ordrer")
+    ActorRef ordrer;
 
     @RequestMapping(value = "/handlekurv/",  method=RequestMethod.GET)
     @ResponseBody()
-    public Map<String, MonsterOrdre> getHandlekurv(){
+    public Map<String, Ordrelinje> getHandlekurv(){
         try {
-            String innloggetBruker = getInnloggetBruker();
-            return (Map<String, MonsterOrdre>) Await.result(ask(handlekurvStore, innloggetBruker, 3000), Duration.create("3 seconds"));
+            return (Map<String, Ordrelinje>) Await.result(ask(ordrer, getInnloggetKunde(), 3000), Duration.create("3 seconds"));
         } catch (Exception e) {
             throw new RuntimeException("feil under henting av handlekurv", e);
         }
@@ -38,29 +37,29 @@ public class HandlekurvController {
     @RequestMapping(value = "/handlekurv/fjern/{monsterNavn}",  method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void fjernMonster( @PathVariable String monsterNavn){
-        handlekurvStore.tell(new FjernMonsterFraHandlekurv(getInnloggetBruker(), monsterNavn), null);
+        ordrer.tell(new FjernMonsterFraHandlekurv(getInnloggetKunde(), monsterNavn), null);
     }
 
     @RequestMapping(value = "/handlekurv/leggTil/{monsterNavn}",  method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void leggTilMonster(@PathVariable String monsterNavn){
-        handlekurvStore.tell(new LeggMonsterIHandlekurv(getInnloggetBruker(), monsterNavn, MonsterRepo.getMonster(monsterNavn).getPris()), null);
+        ordrer.tell(new LeggMonsterIHandlekurv(getInnloggetKunde(), monsterNavn, MonsterRepo.getMonster(monsterNavn).getPris()), null);
     }
 
     @RequestMapping(value = "/handlekurv/bekreftOrdre",  method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void bekreftOrdre(){
-        handlekurvStore.tell(new BekreftOrdre(getInnloggetBruker()), null);
+        ordrer.tell(new BekreftOrdre(getInnloggetKunde()), null);
     }
 
     @RequestMapping(value = "/handlekurv/sum",  method=RequestMethod.GET)
     @ResponseBody
     public HandlekurvSum handlekurvSum(){
         try {
-            Map<String, MonsterOrdre> handlekurv = (Map<String, MonsterOrdre>) Await.result(ask(handlekurvStore, getInnloggetBruker(), 3000), Duration.create("3 seconds"));
+            Map<String, Ordrelinje> handlekurv = (Map<String, Ordrelinje>) Await.result(ask(ordrer, getInnloggetKunde(), 3000), Duration.create("3 seconds"));
 
             double sum = 0;
-            for (MonsterOrdre ordre : handlekurv.values())
+            for (Ordrelinje ordre : handlekurv.values())
                 sum = sum + (MonsterRepo.getMonster(ordre.getMonsternavn()).getPris() * ordre.getAntall());
             return new HandlekurvSum(sum);
         } catch (Exception e) {
@@ -68,7 +67,7 @@ public class HandlekurvController {
         }
     }
 
-    private String getInnloggetBruker() {
-        return (String)httpRequest.getSession().getAttribute("bruker");
+    private String getInnloggetKunde() {
+        return (String)httpRequest.getSession().getAttribute("kundenavn");
     }
 }

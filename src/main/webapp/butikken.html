@@ -1,23 +1,11 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN"
-        "http://www.w3.org/TR/html4/strict.dtd">
-<html lang="en" ng-app="monsterButikken">
-<head>
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-    <title>MonsterButikken</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="monsterbutikken.css">
-</head>
-<body >
-
 <div class="container" ng-controller='MonsterController'>
 
 
     <div class="panel panel-default col-md-10">
-        <div class="panel-body" ng-show="brukernavn">
-            <span class="pull-right" style="margin-left: 5px"> Logget inn som {{brukernavn}} </span><span class="glyphicon glyphicon-user pull-right"></span>
+        <div class="panel-body" ng-show="kundenavn">
+            <span class="pull-right" style="margin-left: 5px"> Logget inn som {{kundenavn}} </span><span class="glyphicon glyphicon-user pull-right"></span>
         </div>
-        <div class="panel-body" ng-show="!brukernavn">
+        <div class="panel-body" ng-show="!kundenavn">
             <button class="pull-right" ng-click="loggInn()"><span class="glyphicon glyphicon-user"></span> Logg inn</button>
         </div>
     </div>
@@ -66,25 +54,6 @@
         </div>
     </div>
 
-    <script type="text/ng-template" id="loggInnModal.html">
-        <div class="modal-header">
-            <h3>Logg inn for å gå videre</h3>
-        </div>
-        <div class="modal-body">
-
-            <form role="form">
-                <div class="form-group">
-                    <label for="brukernavn">Brukernavn</label>
-                    <input type="text" class="form-control" id="brukernavn" ng-model="brukernavn" placeholder="Brukernavn">
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" ng-click="loggInn()">Logg inn</button>
-            <button class="btn btn-warning" ng-click="cancel()">Avbryt</button>
-        </div>
-    </script>
-
     <script type="text/ng-template" id="kjopModal.html">
         <div class="modal-header">
             <h3>Er du sikker på at du vil kjøpe disse monstrene?</h3>
@@ -115,6 +84,3 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.10.0/ui-bootstrap-tpls.min.js"></script>
 <script src="monsterButikkenControllers.js"></script>
 <script src="monsterButikkenServices.js"></script>
-
-</body>
-</html>

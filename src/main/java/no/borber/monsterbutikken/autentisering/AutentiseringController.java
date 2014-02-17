@@ -13,15 +13,15 @@ public class AutentiseringController {
     @Resource
     private HttpServletRequest httpRequest;
 
-    @RequestMapping(value="autentisering/logginn/{brukernavn}", method = RequestMethod.POST)
+    @RequestMapping(value="autentisering/logginn/{kundenavn}", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void loggInn( @PathVariable String brukernavn){
-        httpRequest.getSession().setAttribute("bruker", brukernavn);
+    public void loggInn( @PathVariable String kundenavn){
+        httpRequest.getSession().setAttribute("kundenavn", kundenavn);
     }
 
-    @RequestMapping(value="autentisering/innloggetBruker", method = RequestMethod.GET)
+    @RequestMapping(value="autentisering/innloggetKunde", method = RequestMethod.GET)
     @ResponseBody
-    public Bruker getInnloggetBruker(){
-        return new Bruker((String) httpRequest.getSession().getAttribute("bruker"));
+    public Kunde getInnloggetBruker(){
+        return new Kunde((String) httpRequest.getSession().getAttribute("kundenavn"));
     }
 }
