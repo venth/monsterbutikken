@@ -1,4 +1,4 @@
-package no.borber.monsterbutikken.handlekurv;
+package no.borber.monsterbutikken.ordrer;
 
 public class Ordrelinje {
     private String monsternavn;

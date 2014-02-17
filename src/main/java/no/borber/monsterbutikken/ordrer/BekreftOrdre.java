@@ -1,6 +1,4 @@
-package no.borber.monsterbutikken.handlekurv;
-
-import no.borber.monsterbutikken.es.Cmd;
+package no.borber.monsterbutikken.ordrer;
 
 public class BekreftOrdre extends Cmd {
     private String kundenavn;

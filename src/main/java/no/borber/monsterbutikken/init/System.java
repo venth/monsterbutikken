@@ -2,7 +2,7 @@ package no.borber.monsterbutikken.init;
 
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
-import no.borber.monsterbutikken.handlekurv.Ordrer;
+import no.borber.monsterbutikken.ordrer.Ordrer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

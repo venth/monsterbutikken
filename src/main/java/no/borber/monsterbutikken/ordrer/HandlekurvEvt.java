@@ -1,6 +1,4 @@
-package no.borber.monsterbutikken.handlekurv;
-
-import no.borber.monsterbutikken.es.Evt;
+package no.borber.monsterbutikken.ordrer;
 
 public abstract class HandlekurvEvt extends Evt {
     private String kundenavn;

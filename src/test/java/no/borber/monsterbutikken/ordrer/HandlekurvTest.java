@@ -1,4 +1,4 @@
-package no.borber.monsterbutikken.handlekurv;
+package no.borber.monsterbutikken.ordrer;
 
 import akka.actor.ActorRef;
 import akka.actor.Kill;

@@ -1,4 +1,4 @@
-package no.borber.monsterbutikken.es;
+package no.borber.monsterbutikken.ordrer;
 
 import java.io.Serializable;
 

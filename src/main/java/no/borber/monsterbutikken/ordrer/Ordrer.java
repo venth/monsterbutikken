@@ -1,11 +1,9 @@
-package no.borber.monsterbutikken.handlekurv;
+package no.borber.monsterbutikken.ordrer;
 
 import akka.actor.Props;
 import akka.japi.Procedure;
 import akka.persistence.UntypedEventsourcedProcessor;
 import com.google.common.collect.ImmutableMap;
-import no.borber.monsterbutikken.es.Cmd;
-import no.borber.monsterbutikken.es.Evt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
