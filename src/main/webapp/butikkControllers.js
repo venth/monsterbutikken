@@ -1,6 +1,6 @@
-monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monsterService', 'handlekurvService', 'autentiseringService', '$location', function($scope, $http, $modal, monsterService, handlekurvService, autentiseringService, $location) {
+monsterApp.controller('MonsterController', ['$scope', '$modal', 'monsterService', 'handlekurvService', 'autentiseringService', '$location', function($scope, $modal, monsterService, handlekurvService, autentiseringService, $location) {
 
-    autentiseringService.innloggetBruker().success(function(data){
+    autentiseringService.innloggetKunde().success(function(data){
         $scope.kundenavn = data.kundenavn;
     });
 
@@ -19,19 +19,8 @@ monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monste
 
     getHandlekurv();
 
-    $scope.$watch('handlekurv', function() {
-        var handlekurvTom = true;
-        for (var prop in $scope.handlekurv){
-            if ($scope.handlekurv.hasOwnProperty(prop)){
-                handlekurvTom = false;
-            }
-
-        }
-        $scope.handlekurvTom = handlekurvTom;
-    });
-
     $scope.leggTilMonster = function(monsternavn, e){
-        $scope.takkForKjop = false;
+        $scope.takkForBestilling = false;
         if (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -48,10 +37,20 @@ monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monste
     };
 
     $scope.$watch('handlekurv', function() {
+        var handlekurvTom = true;
+        for (var prop in $scope.handlekurv){
+            if ($scope.handlekurv.hasOwnProperty(prop)){
+                handlekurvTom = false;
+            }
+        }
+        $scope.handlekurvTom = handlekurvTom;
+    }, true);
+
+    $scope.$watch('handlekurv', function() {
         handlekurvService.handlekurvSum().success(function(data){
             $scope.handlekurvSum =  data.sum;
         })
-    });
+    }, true);
 
     $scope.betal = function(){
         var modalInstance = $modal.open({
@@ -70,14 +69,14 @@ monsterApp.controller('MonsterController', ['$scope', '$http', '$modal', 'monste
         modalInstance.result.then(function () {
             handlekurvService.bekreftOrdre().success(function(){
                 getHandlekurv();
-                $scope.takkForKjop = true;
+                $scope.takkForBestilling = true;
             });
         });
     };
 
     $scope.monstre = monsterService.getMonstre().success(function(data){
         $scope.monstre = data;
-    });
+    })
 
 }]);
 
