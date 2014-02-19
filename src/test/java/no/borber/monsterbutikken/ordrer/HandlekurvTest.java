@@ -5,12 +5,14 @@ import akka.actor.Kill;
 import no.borber.monsterbutikken.util.MonsterbutikkenTestKit;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import scala.concurrent.Await;
 import scala.concurrent.duration.Duration;
 
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static akka.pattern.Patterns.ask;
@@ -26,10 +28,10 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
         ActorRef es = _system.actorOf(Ordrer.mkProps(), UUID.randomUUID().toString());
 
         es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
-        List<Ordrelinje> ordrer = (List<Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
+        Map<String, Ordrelinje> ordrer = (Map<String, Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
         assertFalse(ordrer.isEmpty());
-        assertEquals("Kraken", ordrer.get(0).getMonsternavn());
+        assertNotNull(ordrer.get("Kraken"));
     }
 
     @Test
@@ -39,10 +41,10 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
         es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
         es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
 
-        List<Ordrelinje> ordrer = (List<Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
+        Map<String, Ordrelinje> ordrer = (Map<String, Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
         assertFalse(ordrer.isEmpty());
-        assertEquals(2, ordrer.get(0).getAntall());
+        assertEquals(2, ordrer.get("Kraken").getAntall());
     }
 
     @Test
@@ -53,10 +55,10 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
         es.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
         es.tell(new FjernMonsterFraHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
 
-        List<Ordrelinje> ordrer = (List<Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
+        Map<String, Ordrelinje> ordrer = (Map<String, Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
         assertFalse(ordrer.isEmpty());
-        assertEquals(1, ordrer.get(0).getAntall());
+        assertEquals(1, ordrer.get("Kraken").getAntall());
     }
 
     @Test
@@ -68,7 +70,7 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
         es.tell(new FjernMonsterFraHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
         es.tell(new FjernMonsterFraHandlekurv("Dr. Evil", "Kraken"), super.getTestActor());
 
-        List<Ordrelinje> ordrer = (List<Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
+        Map<String, Ordrelinje> ordrer = (Map<String, Ordrelinje>) Await.result(ask(es, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
         assertTrue(ordrer.isEmpty());
     }
@@ -79,19 +81,19 @@ public class HandlekurvTest extends MonsterbutikkenTestKit{
         ActorRef handlekurv = _system.actorOf(Ordrer.mkProps(), storeId);
 
         handlekurv.tell(new LeggMonsterIHandlekurv("Dr. Evil", "Kraken", 100), super.getTestActor());
-        List<Ordrelinje> ordrer = (List<Ordrelinje>) Await.result(ask(handlekurv, "Dr. Evil", 3000), Duration.create("3 seconds"));
+        Map<String, Ordrelinje> ordrer = (Map<String, Ordrelinje>) Await.result(ask(handlekurv, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(ordrer);
         assertFalse(ordrer.isEmpty());
-        assertEquals("Kraken", ordrer.get(0).getMonsternavn());
+        assertEquals("Kraken", ordrer.get("Kraken").getMonsternavn());
 
         handlekurv.tell(Kill.getInstance(), getTestActor());
         Thread.sleep(250); //wait to ensure handlekurv is dead
 
         ActorRef gjenskaptHandlekurv = _system.actorOf(Ordrer.mkProps(), storeId);
-        List<Ordrelinje> gjenskapteOrdrer = (List<Ordrelinje>) Await.result(ask(gjenskaptHandlekurv, "Dr. Evil", 3000), Duration.create("3 seconds"));
+        Map<String, Ordrelinje> gjenskapteOrdrer = (Map<String, Ordrelinje>) Await.result(ask(gjenskaptHandlekurv, "Dr. Evil", 3000), Duration.create("3 seconds"));
         assertNotNull(gjenskapteOrdrer);
         assertFalse(gjenskapteOrdrer.isEmpty());
-        assertEquals("Kraken", gjenskapteOrdrer.get(0).getMonsternavn());
+        assertEquals("Kraken", gjenskapteOrdrer.get("Kraken").getMonsternavn());
 
     }
 
