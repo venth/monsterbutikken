@@ -1,11 +1,13 @@
 package no.borber.monsterShop.orders;
 
 import no.borber.monsterShop.MonsterShopController;
+import no.borber.monsterShop.eventStore.monsterStore.Repo;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.UUID;
 
 
 @Controller
@@ -39,7 +41,11 @@ public class OrderController extends MonsterShopController {
      */
     @RequestMapping(value = "/orders",  method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void placeOrder(){}
+    public void placeOrder(){
+        Repo.getBasketProjection().getBasket(getCurrentBasketId());
+
+        Repo.createOrder(UUID.randomUUID().toString());
+    }
 }
 
 

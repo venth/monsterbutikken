@@ -3,7 +3,7 @@ package no.borber.monsterShop.basket;
 public class BasketItem {
     private String monsterType;
     private double pris;
-    private int number;
+    private int number = 1;
 
     public BasketItem(String monsterType, double price) {
         this.monsterType = monsterType;
@@ -14,7 +14,7 @@ public class BasketItem {
         this.number++;
     }
 
-    public String getMonsterType() {
+    public String getName() {
         return monsterType;
     }
 
