@@ -1,12 +1,12 @@
 package no.borber.monsterShop.basket;
 
 import akka.actor.ActorRef;
+import akka.actor.ActorSelection;
 import akka.actor.ActorSystem;
-import no.borber.monsterShop.basket.Basket;
-import no.borber.monsterShop.eventstore.EventPipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 
 
 @Component
@@ -15,13 +15,15 @@ public class BasketRepository {
     @Autowired
     ActorSystem system;
 
+    @Resource(name = "eventBroadcaster")
+    ActorRef eventBroadcaster;
+
     public ActorRef createBasket(String basketId) {
-        system.actorOf(EventPipe.mkProps(basketId));
-        return system.actorOf(Basket.mkProps(), basketId);
+        return system.actorOf(Basket.mkProps(eventBroadcaster), basketId);
     }
 
-    public ActorRef getById(String basketId) {
-        return system.actorSelection(basketId).anchor();
+    public ActorSelection getById(String basketId) {
+        return system.actorSelection("/user/" + basketId);
     }
 
 

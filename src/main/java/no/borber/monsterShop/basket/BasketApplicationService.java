@@ -1,6 +1,7 @@
 package no.borber.monsterShop.basket;
 
 import akka.actor.ActorRef;
+import akka.actor.ActorSelection;
 import no.borber.monsterShop.monsterTypes.PriceDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -20,12 +21,12 @@ public class BasketApplicationService {
     }
 
     public void addMonsterToBasket(String basketId, String monsterType) {
-        ActorRef basket = basketRepository.getById(basketId);
+        ActorSelection basket = basketRepository.getById(basketId);
         basket.tell(new AddMonsterToBasket(monsterType, priceDomainService.gePrice(monsterType)), null);
     }
 
     public void removeMonsterFromBasket(String basketId, String monsterType) {
-        ActorRef basket = basketRepository.getById(basketId);
+        ActorSelection basket = basketRepository.getById(basketId);
         basket.tell(new RemoveMonsterFromBasket(monsterType), null);
     }
 

@@ -5,8 +5,10 @@ import no.borber.monsterShop.eventstore.Command;
 
 public class CreateBasket extends Command {
     private final String customerId;
+    private String basketId;
 
-    public CreateBasket(String aggregateId, String customerId) {
+    public CreateBasket(String basketId, String customerId) {
+        this.basketId = basketId;
         this.customerId = customerId;
     }
 
@@ -14,4 +16,7 @@ public class CreateBasket extends Command {
         return customerId;
     }
 
+    public String getBasketId() {
+        return basketId;
+    }
 }

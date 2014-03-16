@@ -28,7 +28,7 @@ public class OrderController extends MonsterShopController {
     @Resource(name="orderProjection")
     ActorRef orderProjection;
 
-    @Resource(name="orderHandler")
+    //@Resource(name="orderHandler")
     ActorRef orderHandler;
 
     /**
@@ -70,7 +70,7 @@ public class OrderController extends MonsterShopController {
     @ResponseStatus(HttpStatus.OK)
     public void placeOrder(){
         try {
-            Await.result(ask(orderHandler, new PlaceOrder(getCurrentCustomer()), 3000), Duration.create("3 seconds"));
+           // Await.result(ask(orderHandler, new PlaceOrder(getCurrentCustomer()), 3000), Duration.create("3 seconds"));
         } catch (Exception e) {
             throw new RuntimeException("error while placing order from basket", e);
         }

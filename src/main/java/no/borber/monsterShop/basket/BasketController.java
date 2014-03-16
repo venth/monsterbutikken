@@ -43,7 +43,7 @@ public class BasketController extends MonsterShopController{
         try {
             basketProjection.tell(Update.create(true), null);
             log.info("update completed");
-            return (Map<String, BasketLineItem>) Await.result(ask(basketProjection, new GetBasket(getCurrentCustomer()), 3000), Duration.create("3 seconds"));
+            return (Map<String, BasketLineItem>) Await.result(ask(basketProjection, new GetBasket(getCurrentBasket()), 3000), Duration.create("3 seconds"));
         } catch (Exception e) {
             throw new RuntimeException("error while fetching basket", e);
         }
@@ -75,6 +75,7 @@ public class BasketController extends MonsterShopController{
         if (getCurrentBasket() == null){
             basketId = UUID.randomUUID().toString();
             basketService.createBasket(basketId, getCurrentCustomer());
+            setCurrentBasket(basketId);
         } else {
             basketId = getCurrentBasket();
         }

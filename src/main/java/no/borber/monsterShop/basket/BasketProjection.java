@@ -7,15 +7,18 @@ import no.borber.monsterShop.eventstore.Event;
 import no.borber.monsterShop.eventstore.MonsterShopProjection;
 import no.borber.monsterShop.eventstore.Query;
 import no.borber.monsterShop.orders.OrderPlaced;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BasketProjection extends MonsterShopProjection{
+public class BasketProjection extends MonsterShopProjection {
 
     private Map<String, Map<String, BasketLineItem>> baskets = new HashMap<>();
     private Map<Class, Procedure<Event>> eventHandlers = new HashMap<>();
     private Map<Class, Procedure<Query>> queryHandlers = new HashMap<>();
+
 
     public static Props mkProps() {
         return Props.create(BasketProjection.class);
@@ -49,7 +52,7 @@ public class BasketProjection extends MonsterShopProjection{
     }
 
     private void initEventHandlers() {
-        eventHandlers.put(MonsterAddedToBasket.class, new Procedure<Event>() {
+        eventHandlers.put(BasketCreated.class, new Procedure<Event>() {
             public void apply(Event evt) throws Exception {
                 BasketCreated basketCreated = (BasketCreated) evt;
                 if (baskets.get(basketCreated.getAggregateId()) == null)

@@ -1,4 +1,4 @@
-package no.borber.monsterShop.init;
+package no.borber.monsterShop.eventstore;
 
 import akka.actor.ActorRef;
 import no.borber.monsterShop.eventstore.AggregateType;
