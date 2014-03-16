@@ -1,11 +1,14 @@
 package no.borber.monsterShop.basket;
 
-public class MonsterAddedToBasket extends MonsterShopEvent {
+import no.borber.monsterShop.eventstore.AggregateType;
+import no.borber.monsterShop.eventstore.Event;
+
+public class MonsterAddedToBasket extends Event {
     private String monsterType;
     private double price;
 
-    public MonsterAddedToBasket(String kundenavn, String monsterType, double price) {
-        super(kundenavn);
+    public MonsterAddedToBasket(String aggregateId, String monsterType, double price) {
+        super(aggregateId);
         this.monsterType = monsterType;
         this.price = price;
     }
@@ -20,6 +23,11 @@ public class MonsterAddedToBasket extends MonsterShopEvent {
 
     @Override
     public String getLogMessage() {
-        return "Monster added to the baseket of " + getCustomerName();
+        return "Monster added to the baseket";
+    }
+
+    @Override
+    public AggregateType getAggregateType() {
+        return AggregateType.BASKET;
     }
 }

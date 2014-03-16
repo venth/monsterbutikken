@@ -1,10 +1,11 @@
 package no.borber.monsterShop.orders;
 
-import no.borber.monsterShop.basket.MonsterShopEvent;
+import no.borber.monsterShop.eventstore.AggregateType;
+import no.borber.monsterShop.eventstore.Event;
 
 import java.util.List;
 
-public class OrderPlaced extends MonsterShopEvent {
+public class OrderPlaced extends Event {
     private final List<OrderLineItem> orderLineItems;
 
     public OrderPlaced(String customerName, List<OrderLineItem> orderLineItems) {
@@ -19,5 +20,10 @@ public class OrderPlaced extends MonsterShopEvent {
     @Override
     public String getLogMessage() {
         return "Order placed";
+    }
+
+    @Override
+    public AggregateType getAggregateType() {
+        return AggregateType.ORDER;
     }
 }

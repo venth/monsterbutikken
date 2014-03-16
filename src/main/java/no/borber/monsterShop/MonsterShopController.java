@@ -20,4 +20,12 @@ public abstract class MonsterShopController {
         httpRequest.getSession().removeAttribute("customerName");
     }
 
+    protected String getCurrentBasket() {
+        return (String)httpRequest.getSession().getAttribute("basketId");
+    }
+
+    protected void setCurrentBasket(String basketId) {
+        httpRequest.getSession().setAttribute("basketId", basketId);
+    }
+
 }

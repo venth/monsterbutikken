@@ -1,13 +1,11 @@
 package no.borber.monsterShop.basket;
 
-import no.borber.monsterShop.eventstore.Cmd;
+import no.borber.monsterShop.eventstore.Command;
 
-public class RemoveMonsterFromBasket extends Cmd {
-    private final String customerName;
+public class RemoveMonsterFromBasket extends Command {
     private final String monsterType;
 
-    public RemoveMonsterFromBasket(String customerName, String monsterType) {
-        this.customerName = customerName;
+    public RemoveMonsterFromBasket(String monsterType) {
         this.monsterType = monsterType;
     }
 
@@ -15,7 +13,4 @@ public class RemoveMonsterFromBasket extends Cmd {
         return monsterType;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
 }

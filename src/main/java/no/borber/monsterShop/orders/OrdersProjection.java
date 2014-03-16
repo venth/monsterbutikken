@@ -4,9 +4,8 @@ import akka.actor.Props;
 import akka.japi.Procedure;
 import com.google.common.collect.ImmutableMap;
 import no.borber.monsterShop.GetOrders;
-import no.borber.monsterShop.basket.MonsterShopEvent;
+import no.borber.monsterShop.eventstore.Event;
 import no.borber.monsterShop.eventstore.MonsterShopProjection;
-import no.borber.monsterShop.eventstore.NoResult;
 import no.borber.monsterShop.eventstore.Query;
 
 import java.util.Date;
@@ -17,32 +16,26 @@ import java.util.UUID;
 public class OrdersProjection extends MonsterShopProjection{
 
     private Map<String, Map<String, Order>> orders = new HashMap<>();
-    private Map<Class, Procedure<MonsterShopEvent>> eventHandlers = new HashMap<>();
+    private Map<Class, Procedure<Event>> eventHandlers = new HashMap<>();
     private Map<Class, Procedure<Query>> queryHandlers = new HashMap<>();
 
-    public static Props mkProps(String eventStorePath) {
-        return Props.create(OrdersProjection.class, eventStorePath);
+    public static Props mkProps() {
+        return Props.create(OrdersProjection.class);
     }
 
-    public OrdersProjection(String eventStorePath) {
-        super(eventStorePath);
+    public OrdersProjection() {
         initEventHandlers();
         initQueryHandlers();
     }
 
     @Override
-    protected Procedure<MonsterShopEvent> getEventHandler(Class evtClass) {
+    protected Procedure<Event> getEventHandler(Class evtClass) {
         return eventHandlers.get(evtClass);
     }
 
     @Override
     protected Procedure<Query> getQueryHandler(Class queryClass) {
         return queryHandlers.get(queryClass);
-    }
-
-    @Override
-    public String viewId() {
-        return "OrdersProjection";
     }
 
     private void initQueryHandlers() {
@@ -69,17 +62,17 @@ public class OrdersProjection extends MonsterShopProjection{
     }
 
     private void initEventHandlers() {
-        eventHandlers.put(OrderPlaced.class, new Procedure<MonsterShopEvent>() {
-            public void apply(MonsterShopEvent evt) throws Exception {
+        eventHandlers.put(OrderPlaced.class, new Procedure<Event>() {
+            public void apply(Event evt) throws Exception {
                 OrderPlaced orderPlaced = (OrderPlaced) evt;
 
-                if (orders.get(orderPlaced.getCustomerName()) == null){
+                if (orders.get(orderPlaced.getAggregateId()) == null){
                     Map<String, Order> customerOrders = new HashMap<>();
-                    orders.put(orderPlaced.getCustomerName(), customerOrders);
+                    orders.put(orderPlaced.getAggregateId(), customerOrders);
 
                 }
 
-                orders.get(orderPlaced.getCustomerName()).put(UUID.randomUUID().toString(), new Order(new Date(), 300, orderPlaced.getOrderLineItems()));
+                orders.get(orderPlaced.getAggregateId()).put(UUID.randomUUID().toString(), new Order(new Date(), 300, orderPlaced.getOrderLineItems()));
             }
         });
 

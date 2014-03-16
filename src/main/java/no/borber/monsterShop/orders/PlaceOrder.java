@@ -1,8 +1,8 @@
 package no.borber.monsterShop.orders;
 
-import no.borber.monsterShop.eventstore.Cmd;
+import no.borber.monsterShop.eventstore.Command;
 
-public class PlaceOrder extends Cmd {
+public class PlaceOrder extends Command {
     private String customerName;
 
     public PlaceOrder(String kundenavn) {

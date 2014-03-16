@@ -6,6 +6,7 @@ import no.borber.monsterShop.MonsterShopController;
 import no.borber.monsterShop.monsterTypes.MonsterTypesRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import scala.concurrent.duration.Duration;
 
 import javax.annotation.Resource;
 import java.util.Map;
+import java.util.UUID;
 
 import static akka.pattern.Patterns.ask;
 
@@ -24,8 +26,8 @@ public class BasketController extends MonsterShopController{
     @Resource(name="basketProjection")
     ActorRef basketProjection;
 
-    @Resource(name="basketHandler")
-    ActorRef basketHandler;
+    @Autowired
+    BasketApplicationService basketService;
 
     public static final Logger log = LoggerFactory.getLogger(BasketController.class);
 
@@ -53,14 +55,10 @@ public class BasketController extends MonsterShopController{
      *
      * @param monstertype name of the monstertype to be removed
      */
-    @RequestMapping(value = "/basket/remove/{monstertype}",  method=RequestMethod.POST)
+    @RequestMapping(value = "/basket/{monstertype}",  method=RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void remove(@PathVariable String monstertype){
-        try {
-            Await.result(ask(basketHandler, new RemoveMonsterFromBasket(getCurrentCustomer(), monstertype), 3000), Duration.create("3 seconds"));
-        } catch (Exception e) {
-            throw new RuntimeException("error while removing monster from basket", e);
-        }
+        basketService.removeMonsterFromBasket(getCurrentBasket(), monstertype);
     }
 
     /**
@@ -69,15 +67,19 @@ public class BasketController extends MonsterShopController{
      *
      * @param monstertype name of the monstertype to be added
      */
-    @RequestMapping(value = "/basket/add/{monstertype}",  method=RequestMethod.POST)
+    @RequestMapping(value = "/basket/{monstertype}",  method=RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void add(@PathVariable String monstertype){
-        log.info("adding monster basket");
-        try {
-            Await.result(ask(basketHandler, new AddMonsterToBasket(getCurrentCustomer(), monstertype, MonsterTypesRepo.getMonsterType(monstertype).getPrice()), 3000), Duration.create("3 seconds"));
-        } catch (Exception e) {
-            throw new RuntimeException("error while removing monster from basket", e);
+
+        String basketId;
+        if (getCurrentBasket() == null){
+            basketId = UUID.randomUUID().toString();
+            basketService.createBasket(basketId, getCurrentCustomer());
+        } else {
+            basketId = getCurrentBasket();
         }
+
+         basketService.addMonsterToBasket(basketId, monstertype);
     }
 
     /**

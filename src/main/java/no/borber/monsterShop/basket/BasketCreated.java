@@ -2,22 +2,19 @@ package no.borber.monsterShop.basket;
 
 import no.borber.monsterShop.eventstore.AggregateType;
 import no.borber.monsterShop.eventstore.Event;
+import scala.collection.immutable.Seq;
 
-public class MonsterRemovedFromBasket extends Event {
-    private String monsterType;
+public class BasketCreated extends Event{
+    private String customerName;
 
-    public MonsterRemovedFromBasket(String basketId, String monsterType) {
+    public BasketCreated(String basketId, String customerName) {
         super(basketId);
-        this.monsterType = monsterType;
-    }
-
-    public String getMonsterType() {
-        return monsterType;
+        this.customerName = customerName;
     }
 
     @Override
     public String getLogMessage() {
-        return "Monster removed from the baseket of ";
+        return null;
     }
 
     @Override
@@ -25,4 +22,7 @@ public class MonsterRemovedFromBasket extends Event {
         return AggregateType.BASKET;
     }
 
+    public String getCustomerName() {
+        return customerName;
+    }
 }

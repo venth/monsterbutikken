@@ -1,3 +1,4 @@
+/*
 package no.borber.monsterShop.orders;
 
 import akka.actor.ActorRef;
@@ -66,3 +67,4 @@ public class OrderHandler extends MonsterShopCommandHandler {
 
 
 }
+*/

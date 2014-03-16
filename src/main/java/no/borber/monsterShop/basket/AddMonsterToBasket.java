@@ -1,21 +1,15 @@
 package no.borber.monsterShop.basket;
 
-import no.borber.monsterShop.eventstore.Cmd;
+import no.borber.monsterShop.eventstore.Command;
 
-public class AddMonsterToBasket extends Cmd {
+public class AddMonsterToBasket extends Command {
 
-    private String customerName;
     private String monsterType;
     private double price;
 
-    public AddMonsterToBasket(String customerName, String monsterType, double price) {
-        this.customerName = customerName;
+    public AddMonsterToBasket(String monsterType, double price) {
         this.monsterType = monsterType;
         this.price = price;
-    }
-
-    public String getCustomerName() {
-        return customerName;
     }
 
     public String getMonsterType() {
